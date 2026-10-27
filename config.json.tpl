@@ -1,40 +1,54 @@
 {
   "log": {
-    "loglevel": "warning"
+    "level": "warning"
   },
   "inbounds": [
     {
+      "type": "vless",
+      "tag": "vless-ws",
       "listen": "0.0.0.0",
-      "port": __PORT__,
-      "protocol": "vless",
-      "settings": {
-        "clients": [
-          {
-            "id": "__UUID__",
-            "level": 0
-          }
-        ],
-        "decryption": "none"
-      },
-      "streamSettings": {
-        "network": "ws",
-        "security": "none",
-        "wsSettings": {
-          "path": "__WSPATH__"
+      "listen_port": __PORT__,
+      "users": [
+        {
+          "uuid": "__UUID__"
         }
-      },
-      "sniffing": {
+      ],
+      "transport": {
+        "type": "ws",
+        "path": "__WSPATH__"
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "vless-reality",
+      "listen": "0.0.0.0",
+      "listen_port": __REALITY_PORT__,
+      "users": [
+        {
+          "uuid": "__UUID__",
+          "flow": "xtls-rprx-vision"
+        }
+      ],
+      "tls": {
         "enabled": true,
-        "destOverride": [
-          "http",
-          "tls"
-        ]
+        "server_name": "www.microsoft.com",
+        "reality": {
+          "enabled": true,
+          "handshake": {
+            "server": "www.microsoft.com",
+            "server_port": 443
+          },
+          "private_key": "__REALITY_PRIVATE_KEY__",
+          "short_id": [
+            "__REALITY_SHORT_ID__"
+          ]
+        }
       }
     }
   ],
   "outbounds": [
     {
-      "protocol": "freedom",
+      "type": "direct",
       "tag": "direct"
     }
   ]
